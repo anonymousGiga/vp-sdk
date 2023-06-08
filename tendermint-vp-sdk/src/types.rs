@@ -1,19 +1,14 @@
-use candid::{decode_args, CandidType, Decode, Encode, Nat};
-use ic_cdk::export::{
-    serde::{Deserialize, Serialize},
-    Principal,
-};
+use candid::CandidType;
+use ic_cdk::export::serde::Deserialize;
 
 pub const LOCAL_NET: &str = "http://localhost:4943";
 pub const MAIN_NET: &str = "https://ic0.app";
-
 
 #[derive(CandidType, Deserialize, Clone, Default, Debug)]
 pub struct SmState {
     pub client_state: Vec<u8>,
     pub consensus_state: Vec<u8>,
 }
-
 
 #[derive(CandidType, Deserialize, Clone, Default, Debug)]
 pub struct Proofs {

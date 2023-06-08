@@ -1,9 +1,6 @@
+use crate::identity::create_identity;
 use crate::types::*;
-use candid::{decode_args, CandidType, Decode, Encode, Nat};
-use ic_cdk::export::{
-    serde::{Deserialize, Serialize},
-    Principal,
-};
+use candid::{Decode, Encode};
 
 async fn update_ic(
     canister_id: &str,
@@ -14,6 +11,7 @@ async fn update_ic(
     let url = if is_mainnet { MAIN_NET } else { LOCAL_NET };
     let agent = ic_agent::Agent::builder()
         .with_url(url)
+        .with_identity(create_identity())
         .build()
         .expect("should work");
 
@@ -79,13 +77,14 @@ async fn update_ic_and_get_proofs(
     Ok(response)
 }
 
-pub async fn send_msg_for_smheader (
+pub async fn send_msg_for_smheader(
     canister_id: &str,
     method_name: &str,
     args: Vec<u8>,
     is_mainnet: bool,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
-    let result = update_ic_and_get_smheader(canister_id, method_name, args, is_mainnet).await
+    let result = update_ic_and_get_smheader(canister_id, method_name, args, is_mainnet)
+        .await
         .map_err(|e| e.to_string())?;
 
     match result {
@@ -100,7 +99,8 @@ pub async fn send_msg_for_smstate(
     args: Vec<u8>,
     is_mainnet: bool,
 ) -> Result<SmState, Box<dyn std::error::Error>> {
-    let result = update_ic_and_get_smstate(canister_id, method_name, args, is_mainnet).await
+    let result = update_ic_and_get_smstate(canister_id, method_name, args, is_mainnet)
+        .await
         .map_err(|e| e.to_string())?;
 
     match result {
@@ -131,7 +131,8 @@ pub async fn send_msg(
     args: Vec<u8>,
     is_mainnet: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let result = update_ic_and_get_nothing(canister_id, method_name, args, is_mainnet).await
+    let result = update_ic_and_get_nothing(canister_id, method_name, args, is_mainnet)
+        .await
         .map_err(|e| e.to_string())?;
 
     match result {
