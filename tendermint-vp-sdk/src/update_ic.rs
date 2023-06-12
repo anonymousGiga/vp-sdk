@@ -77,7 +77,7 @@ async fn update_ic_and_get_proofs(
     Ok(response)
 }
 
-pub async fn send_msg_for_smheader(
+pub(crate) async fn send_msg_for_smheader(
     canister_id: &str,
     method_name: &str,
     args: Vec<u8>,
@@ -93,7 +93,7 @@ pub async fn send_msg_for_smheader(
     }
 }
 
-pub async fn send_msg_for_smstate(
+pub(crate) async fn send_msg_for_smstate(
     canister_id: &str,
     method_name: &str,
     args: Vec<u8>,
@@ -109,7 +109,7 @@ pub async fn send_msg_for_smstate(
     }
 }
 
-pub async fn send_msg_for_proofs(
+pub(crate) async fn send_msg_for_proofs(
     canister_id: &str,
     method_name: &str,
     args: Vec<u8>,
@@ -125,7 +125,7 @@ pub async fn send_msg_for_proofs(
     }
 }
 
-pub async fn send_msg(
+pub(crate) async fn send_msg(
     canister_id: &str,
     method_name: &str,
     args: Vec<u8>,

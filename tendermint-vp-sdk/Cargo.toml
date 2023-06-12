@@ -17,3 +17,7 @@ serde = { version = "1.0.130", features = ["derive"] }
 tokio = { version = "1.28.2", features = ["full"] }
 
 ring = "0.16.20"
+
+
+# ibc-proto = { default-features = false, git = "https://github.com/octopus-network/ibc-proto-rs.git", branch = "full-cosmos-type-v0.25.0"}
+# prost = { version = "0.11", default-features = false }

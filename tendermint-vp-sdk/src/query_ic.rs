@@ -41,7 +41,7 @@ async fn query_ic_and_get_text(
     Ok(response)
 }
 
-pub async fn send_msg_for_smheader(
+pub async fn query_pubkey(
     canister_id: &str,
     method_name: &str,
     args: Vec<u8>,
