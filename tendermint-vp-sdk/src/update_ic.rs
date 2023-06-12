@@ -29,14 +29,14 @@ async fn update_ic(
     Ok(response)
 }
 
-async fn update_ic_and_get_smheader(
+async fn update_ic_and_get_vec(
     canister_id: &str,
     method_name: &str,
     args: Vec<u8>,
     is_mainnet: bool,
-) -> Result<SmHeaderResult, Box<dyn std::error::Error>> {
+) -> Result<VecResult, Box<dyn std::error::Error>> {
     let response = update_ic(canister_id, method_name, args, is_mainnet).await?;
-    let response = Decode!(response.as_slice(), SmHeaderResult)?;
+    let response = Decode!(response.as_slice(), VecResult)?;
 
     Ok(response)
 }
@@ -77,19 +77,19 @@ async fn update_ic_and_get_proofs(
     Ok(response)
 }
 
-pub(crate) async fn send_msg_for_smheader(
+pub(crate) async fn send_msg_for_vec(
     canister_id: &str,
     method_name: &str,
     args: Vec<u8>,
     is_mainnet: bool,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
-    let result = update_ic_and_get_smheader(canister_id, method_name, args, is_mainnet)
+    let result = update_ic_and_get_vec(canister_id, method_name, args, is_mainnet)
         .await
         .map_err(|e| e.to_string())?;
 
     match result {
-        SmHeaderResult::Ok(smheader) => Ok(smheader),
-        SmHeaderResult::Err(e) => Err(e.into()),
+        VecResult::Ok(smheader) => Ok(smheader),
+        VecResult::Err(e) => Err(e.into()),
     }
 }
 
@@ -130,13 +130,13 @@ pub(crate) async fn send_msg(
     method_name: &str,
     args: Vec<u8>,
     is_mainnet: bool,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<(), String> {
     let result = update_ic_and_get_nothing(canister_id, method_name, args, is_mainnet)
         .await
         .map_err(|e| e.to_string())?;
 
     match result {
         NullResult::Ok(_) => Ok(()),
-        NullResult::Err(e) => Err(e.into()),
+        NullResult::Err(e) => Err(e),
     }
 }

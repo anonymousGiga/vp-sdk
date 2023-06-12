@@ -5,7 +5,7 @@ use candid::{Decode, Encode};
 async fn query_ic(
     canister_id: &str,
     method_name: &str,
-    args: Vec<u8>,
+    args: u64,
     is_mainnet: bool,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let url = if is_mainnet { MAIN_NET } else { LOCAL_NET };
@@ -29,30 +29,39 @@ async fn query_ic(
     Ok(response)
 }
 
-async fn query_ic_and_get_text(
+async fn query_ic_and_get_u64(
     canister_id: &str,
     method_name: &str,
-    args: Vec<u8>,
+    args: u64,
     is_mainnet: bool,
-) -> Result<TextResult, Box<dyn std::error::Error>> {
+) -> Result<U64Result, Box<dyn std::error::Error>> {
     let response = query_ic(canister_id, method_name, args, is_mainnet).await?;
-    let response = Decode!(response.as_slice(), TextResult)?;
+    let response = Decode!(response.as_slice(), U64Result)?;
 
     Ok(response)
 }
 
-pub async fn query_pubkey(
+async fn call_ic_and_get_u64(
     canister_id: &str,
     method_name: &str,
-    args: Vec<u8>,
+    args: u64,
     is_mainnet: bool,
-) -> Result<String, Box<dyn std::error::Error>> {
-    let result = query_ic_and_get_text(canister_id, method_name, args, is_mainnet)
+) -> Result<u64, String> {
+    let result = query_ic_and_get_u64(canister_id, method_name, args, is_mainnet)
         .await
         .map_err(|e| e.to_string())?;
 
     match result {
-        TextResult::Ok(s) => Ok(s),
-        TextResult::Err(e) => Err(e.into()),
+        U64Result::Ok(data) => Ok(data),
+        U64Result::Err(e) => Err(e),
     }
+}
+
+pub async fn query_sequence_times(
+    canister_id: &str,
+    is_mainnet: bool,
+    sequence: u64,
+) -> Result<u64, String> {
+    let method_name = "get_sequence_times";
+    call_ic_and_get_u64(canister_id, method_name, sequence, is_mainnet).await
 }
