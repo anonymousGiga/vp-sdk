@@ -11,12 +11,14 @@ pub async fn get_pubkey(canister_id: &str, is_mainnet: bool) -> Result<Vec<u8>, 
 #[cfg(test)]
 mod tests {
     use super::get_pubkey;
-    const CANISTER_ID: &str = "novnv-7iaaa-aaaaa-aacca-cai";
+    use std::fs;
+    const PATH: &str = "tests/resource/canister_id";
 
     #[test]
     fn query_pubkey_works() {
+        let canister_id = fs::read_to_string(PATH).expect("Read file error");
         tokio::runtime::Runtime::new().unwrap().block_on(async {
-            let ret = get_pubkey(CANISTER_ID, false).await;
+            let ret = get_pubkey(&canister_id, false).await;
             assert!(ret.is_ok());
         });
     }
