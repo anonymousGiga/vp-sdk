@@ -3,6 +3,7 @@ pub mod client_msg;
 pub mod conn_msg;
 pub mod get_pubkey;
 mod identity;
+pub mod packet_msg;
 pub mod query_ic;
 pub mod start_msg;
 mod types;
